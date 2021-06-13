@@ -10,4 +10,19 @@ const createTask = (req, res) => {
     .catch((e) => error(res, e.message, 501));
 };
 
-module.exports = { createTask };
+const getTasks = (req, res) => {
+  Task.find({})
+    .then((tasks) => success(res, tasks, 200))
+    .catch((e) => error(res, e.message, 500));
+};
+
+const getTaskById = (req, res) => {
+  const { id: _id } = req.params;
+
+  Task.findById(_id).then((task) => {
+    if (!task) error(res, "Task not found", 404);
+    else success(res, task, 200);
+  });
+};
+
+module.exports = { createTask, getTasks, getTaskById };

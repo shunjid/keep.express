@@ -10,4 +10,21 @@ const signUp = (req, res) => {
     .catch((e) => error(res, e.message, 501));
 };
 
-module.exports = { signUp };
+const getUsers = (req, res) => {
+  User.find({})
+    .then((users) => success(res, users, 200))
+    .catch((e) => error(res, e.message, 500));
+};
+
+const getUserById = (req, res) => {
+  const { id: _id } = req.params;
+
+  User.findById(_id)
+    .then((user) => {
+      if (!user) error(res, "User not found", 404);
+      else success(res, user, 200);
+    })
+    .catch((e) => error(res, e.message, 500));
+};
+
+module.exports = { signUp, getUsers, getUserById };

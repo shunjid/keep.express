@@ -62,4 +62,19 @@ const updateTask = async (req, res) => {
   }
 };
 
-module.exports = { createTask, getTasks, getTaskById, updateTask };
+const deleteTask = async (req, res) => {
+  const { id: _id } = req.params;
+
+  console.log(_id);
+
+  try {
+    const task = await Task.findByIdAndDelete(_id);
+
+    if (!task) error(res, "Task not found", 404);
+    else success(res, task, 200);
+  } catch (e) {
+    error(res, e.message, 400);
+  }
+};
+
+module.exports = { createTask, getTasks, getTaskById, updateTask, deleteTask };

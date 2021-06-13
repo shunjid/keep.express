@@ -7,7 +7,7 @@ const signUp = (req, res) => {
   user
     .save()
     .then(() => success(res, user))
-    .catch((e) => error(res, e.message));
+    .catch((e) => error(res, e.message, 501));
 };
 
 module.exports = { signUp };

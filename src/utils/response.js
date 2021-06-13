@@ -5,7 +5,9 @@ const success = (response, data) => {
   });
 };
 
-const error = (response, message) => {
+const error = (response, message, status = 500) => {
+  response.status(status);
+
   response.send({
     status: "failed",
     message: message,

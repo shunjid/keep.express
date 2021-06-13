@@ -1,5 +1,6 @@
 const Task = require("../models/tasksModel");
 const { success, error } = require("../utils/response");
+const { attributeValidator } = require("../utils/validator");
 
 const createTask = async (req, res) => {
   const task = new Task(req.body);
@@ -34,4 +35,31 @@ const getTaskById = async (req, res) => {
   }
 };
 
-module.exports = { createTask, getTasks, getTaskById };
+const updateTask = async (req, res) => {
+  const { id: _id } = req.params;
+  const body = req.body;
+  const options = {
+    new: true,
+    runValidators: true,
+  };
+
+  const isValidModel = await attributeValidator({
+    requested: Object.keys(body),
+    allowed: ["title", "description", "completionDate", "isCompleted"],
+  });
+
+  if (isValidModel) {
+    try {
+      const task = await Task.findByIdAndUpdate(_id, body, options);
+
+      if (!task) error(res, "Task not found", 404);
+      else success(res, task, 200);
+    } catch (e) {
+      error(res, e.message, 400);
+    }
+  } else {
+    error(res, "Invalid updates", 400);
+  }
+};
+
+module.exports = { createTask, getTasks, getTaskById, updateTask };

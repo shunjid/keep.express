@@ -19,10 +19,12 @@ const getTasks = (req, res) => {
 const getTaskById = (req, res) => {
   const { id: _id } = req.params;
 
-  Task.findById(_id).then((task) => {
-    if (!task) error(res, "Task not found", 404);
-    else success(res, task, 200);
-  });
+  Task.findById(_id)
+    .then((task) => {
+      if (!task) error(res, "Task not found", 404);
+      else success(res, task, 200);
+    })
+    .catch((e) => error(res, e.message, 500));
 };
 
 module.exports = { createTask, getTasks, getTaskById };

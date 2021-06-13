@@ -1,4 +1,6 @@
-const success = (response, data) => {
+const success = (response, data, status = 200) => {
+  response.status(status);
+
   response.send({
     status: "ok",
     data: data,

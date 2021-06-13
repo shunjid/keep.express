@@ -6,7 +6,7 @@ const createTask = (req, res) => {
 
   task
     .save()
-    .then(() => success(res, task))
+    .then(() => success(res, task, 201))
     .catch((e) => error(res, e.message, 501));
 };
 

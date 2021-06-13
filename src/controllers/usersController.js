@@ -6,7 +6,7 @@ const signUp = (req, res) => {
 
   user
     .save()
-    .then(() => success(res, user))
+    .then(() => success(res, user, 201))
     .catch((e) => error(res, e.message, 501));
 };
 

@@ -42,18 +42,21 @@ const updateUserById = async (req, res) => {
     new: true,
     runValidators: true,
   };
+  const updates = ["name", "email", "age", "password"];
 
   const isValidModel = await attributeValidator({
     requested: Object.keys(body),
-    allowed: ["name", "email", "age", "password"],
+    allowed: updates,
   });
 
   if (isValidModel) {
     try {
-      const user = await User.findByIdAndUpdate(_id, body, options);
-
+      const user = await User.findById(_id);
       if (!user) error(res, "User not found", 404);
-      else success(res, user, 200);
+
+      updates.map((update) => (user[update] = body[update] || user[update]));
+      const result = await user.save();
+      success(res, result, 200);
     } catch (e) {
       error(res, e.message, 500);
     }

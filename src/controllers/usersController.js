@@ -1,4 +1,5 @@
 const User = require("../models/usersModel");
+const { attributeValidator } = require("../utils/validator");
 const { success, error } = require("../utils/response");
 
 const signUp = async (req, res) => {
@@ -34,4 +35,31 @@ const getUserById = async (req, res) => {
   }
 };
 
-module.exports = { signUp, getUsers, getUserById };
+const updateUserById = async (req, res) => {
+  const { id: _id } = req.params;
+  const body = req.body;
+  const options = {
+    new: true,
+    runValidators: true,
+  };
+
+  const isValidModel = await attributeValidator({
+    requested: Object.keys(body),
+    allowed: ["name", "email", "age", "password"],
+  });
+
+  if (isValidModel) {
+    try {
+      const user = await User.findByIdAndUpdate(_id, body, options);
+
+      if (!user) error(res, "User not found", 404);
+      else success(res, user, 200);
+    } catch (e) {
+      error(res, e.message, 500);
+    }
+  } else {
+    error(res, "Invalid updates", 400);
+  }
+};
+
+module.exports = { signUp, getUsers, getUserById, updateUserById };

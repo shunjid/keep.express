@@ -65,4 +65,15 @@ const updateUserById = async (req, res) => {
   }
 };
 
-module.exports = { signUp, getUsers, getUserById, updateUserById };
+const login = async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    const user = await User.findByCredentials(email, password);
+    success(res, user, 200);
+  } catch (e) {
+    error(res, e.message, 500);
+  }
+};
+
+module.exports = { signUp, getUsers, getUserById, updateUserById, login };

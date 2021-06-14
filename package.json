@@ -4,8 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "dev": "nodemon app.js",
-    "mongo": "/home/shunjid/mongodb/bin/mongod --dbpath=/home/shunjid/mongo-data"
+    "dev": "nodemon app.js"
   },
   "author": "shunjid",
   "license": "ISC",

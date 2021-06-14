@@ -38,10 +38,6 @@ const getUserById = async (req, res) => {
 const updateUserById = async (req, res) => {
   const { id: _id } = req.params;
   const body = req.body;
-  const options = {
-    new: true,
-    runValidators: true,
-  };
   const updates = ["name", "email", "age", "password"];
 
   const isValidModel = await attributeValidator({

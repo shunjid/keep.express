@@ -17,6 +17,7 @@ const auth = async (req, res, next) => {
     if (!user) throw new Error();
 
     req.user = user;
+    req.token = token;
     next();
   } catch (e) {
     error(res, "Please authenticate first", 401);

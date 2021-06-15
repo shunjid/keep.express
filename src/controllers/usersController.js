@@ -74,4 +74,56 @@ const login = async (req, res) => {
   }
 };
 
-module.exports = { signUp, getCurrentUser, getUserById, updateUserById, login };
+const logout = async (req, res) => {
+  try {
+    const currentUser = req.user;
+    const currentUserToken = req.token;
+
+    currentUser.tokens = currentUser.tokens.filter((eachTokenObject) => {
+      return eachTokenObject.token !== currentUserToken;
+    });
+
+    await currentUser.save();
+    success(res, "Logged out successfully");
+  } catch (e) {
+    error(res, "Failed to logout", 500);
+  }
+};
+
+const logoutAll = async (req, res) => {
+  try {
+    const currentUser = req.user;
+    currentUser.tokens = [];
+    await currentUser.save();
+    success(res, "Logged out successfully");
+  } catch (e) {
+    error(res, "Failed to logout", 500);
+  }
+};
+
+const logoutExceptCurrent = async (req, res) => {
+  try {
+    const currentUser = req.user;
+    const currentUserToken = req.token;
+
+    currentUser.tokens = currentUser.tokens.filter((eachTokenObject) => {
+      return eachTokenObject.token === currentUserToken;
+    });
+
+    await currentUser.save();
+    success(res, "Logged out successfully");
+  } catch (e) {
+    error(res, "Failed to logout", 500);
+  }
+};
+
+module.exports = {
+  signUp,
+  getCurrentUser,
+  getUserById,
+  updateUserById,
+  login,
+  logout,
+  logoutAll,
+  logoutExceptCurrent,
+};

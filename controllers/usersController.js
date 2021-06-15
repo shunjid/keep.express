@@ -22,19 +22,6 @@ const getCurrentUser = async (req, res) => {
   }
 };
 
-const getUserById = async (req, res) => {
-  const { id: _id } = req.params;
-
-  try {
-    const user = await User.findById(_id);
-
-    if (!user) error(res, "User not found", 404);
-    else success(res, user, 200);
-  } catch (e) {
-    error(res, e.message, 500);
-  }
-};
-
 const updateUserById = async (req, res) => {
   const user = req.user;
   const body = req.body;
@@ -117,7 +104,6 @@ const logoutExceptCurrent = async (req, res) => {
 module.exports = {
   signUp,
   getCurrentUser,
-  getUserById,
   updateUserById,
   login,
   logout,

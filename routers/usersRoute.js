@@ -2,7 +2,6 @@ const express = require("express");
 const {
   signUp,
   getCurrentUser,
-  getUserById,
   updateUserById,
   login,
   logout,
@@ -18,7 +17,6 @@ router.route("/login").post(login);
 
 router.use(auth);
 router.route("/me").get(getCurrentUser);
-router.route("/:id").get(getUserById);
 router.route("/me").patch(updateUserById);
 router.route("/logout").post(logout);
 router.route("/logoutAll").post(logoutAll);

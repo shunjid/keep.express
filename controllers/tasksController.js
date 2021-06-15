@@ -17,8 +17,12 @@ const createTask = async (req, res) => {
 };
 
 const getTasks = async (req, res) => {
+  const currentUser = req.user;
+
   try {
-    const tasks = await Task.find({});
+    const tasks = await Task.find({
+      owner: currentUser._id,
+    });
     success(res, tasks, 200);
   } catch (e) {
     error(res, e.message, 500);
@@ -27,9 +31,13 @@ const getTasks = async (req, res) => {
 
 const getTaskById = async (req, res) => {
   const { id: _id } = req.params;
+  const currentUser = req.user;
 
   try {
-    const task = await Task.findById(_id);
+    const task = await Task.findOne({
+      _id,
+      owner: currentUser._id,
+    });
 
     if (!task) error(res, "Task not found", 404);
     else success(res, task, 200);
@@ -40,23 +48,24 @@ const getTaskById = async (req, res) => {
 
 const updateTask = async (req, res) => {
   const { id: _id } = req.params;
+  const currentUser = req.user;
   const body = req.body;
-  const options = {
-    new: true,
-    runValidators: true,
-  };
 
+  const updates = ["title", "description", "completionDate", "isCompleted"];
   const isValidModel = await attributeValidator({
     requested: Object.keys(body),
-    allowed: ["title", "description", "completionDate", "isCompleted"],
+    allowed: updates,
   });
 
   if (isValidModel) {
     try {
-      const task = await Task.findByIdAndUpdate(_id, body, options);
+      const task = await Task.findOne({ _id: _id, owner: currentUser._id });
 
       if (!task) error(res, "Task not found", 404);
-      else success(res, task, 200);
+
+      updates.map((update) => (task[update] = body[update] || task[update]));
+      const result = await task.save();
+      success(res, result, 200);
     } catch (e) {
       error(res, e.message, 400);
     }
@@ -67,11 +76,13 @@ const updateTask = async (req, res) => {
 
 const deleteTask = async (req, res) => {
   const { id: _id } = req.params;
-
-  console.log(_id);
+  const currentUser = req.user;
 
   try {
-    const task = await Task.findByIdAndDelete(_id);
+    const task = await Task.findOneAndDelete({
+      _id: _id,
+      owner: currentUser._id,
+    });
 
     if (!task) error(res, "Task not found", 404);
     else success(res, task, 200);

@@ -36,7 +36,7 @@ const getUserById = async (req, res) => {
 };
 
 const updateUserById = async (req, res) => {
-  const { id: _id } = req.params;
+  const user = req.user;
   const body = req.body;
   const updates = ["name", "email", "age", "password"];
 
@@ -47,9 +47,6 @@ const updateUserById = async (req, res) => {
 
   if (isValidModel) {
     try {
-      const user = await User.findById(_id);
-      if (!user) error(res, "User not found", 404);
-
       updates.map((update) => (user[update] = body[update] || user[update]));
       const result = await user.save();
       success(res, result, 200);

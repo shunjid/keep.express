@@ -3,7 +3,10 @@ const { success, error } = require("../utils/response");
 const { attributeValidator } = require("../utils/validator");
 
 const createTask = async (req, res) => {
-  const task = new Task(req.body);
+  const task = new Task({
+    ...req.body,
+    owner: req.user._id,
+  });
 
   try {
     await task.save();

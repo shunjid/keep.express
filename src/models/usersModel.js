@@ -74,9 +74,9 @@ userSchema.methods.generateAuthToken = async function () {
   };
   const secret = "CatsAreCute";
   const options = {
-    expieresIn: "7 days",
+    expiresIn: "7 days",
   };
-  const token = jwt.sign(payload, secret);
+  const token = jwt.sign(payload, secret, options);
   user.tokens = user.tokens.concat({ token });
 
   await user.save();

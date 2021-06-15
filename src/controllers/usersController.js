@@ -66,7 +66,9 @@ const login = async (req, res) => {
 
   try {
     const user = await User.findByCredentials(email, password);
-    success(res, user, 200);
+    const token = await user.generateAuthToken();
+
+    success(res, { user, token }, 200);
   } catch (e) {
     error(res, e.message, 500);
   }

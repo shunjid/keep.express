@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 const userSchema = mongoose.Schema({
   name: {
@@ -34,6 +35,14 @@ const userSchema = mongoose.Schema({
         throw new Error("Password cannot contain 'password'");
     },
   },
+  tokens: [
+    {
+      token: {
+        type: String,
+        required: true,
+      },
+    },
+  ],
 });
 
 // Match user credentials
@@ -56,6 +65,23 @@ userSchema.pre("save", async function (next) {
   }
   next();
 });
+
+// Generate Auth Token
+userSchema.methods.generateAuthToken = async function () {
+  const user = this;
+  const payload = {
+    _id: user._id.toString(),
+  };
+  const secret = "CatsAreCute";
+  const options = {
+    expieresIn: "7 days",
+  };
+  const token = jwt.sign(payload, secret);
+  user.tokens = user.tokens.concat({ token });
+
+  await user.save();
+  return token;
+};
 
 const User = mongoose.model("User", userSchema);
 

@@ -1,2 +1,2 @@
-require("./src/connections/mongoose");
-require("./src/server");
+require("./connections/mongoose");
+require("./server");

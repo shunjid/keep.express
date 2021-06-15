@@ -7,7 +7,8 @@ const signUp = async (req, res) => {
 
   try {
     await user.save();
-    success(res, user, 201);
+    const token = await user.generateAuthToken();
+    success(res, { user, token }, 201);
   } catch (e) {
     error(res, e.message, 501);
   }

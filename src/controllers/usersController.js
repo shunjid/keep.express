@@ -14,10 +14,9 @@ const signUp = async (req, res) => {
   }
 };
 
-const getUsers = async (req, res) => {
+const getCurrentUser = async (req, res) => {
   try {
-    const users = await User.find({});
-    success(res, users, 200);
+    success(res, req.user, 200);
   } catch (e) {
     error(res, e.message, 500);
   }
@@ -75,4 +74,4 @@ const login = async (req, res) => {
   }
 };
 
-module.exports = { signUp, getUsers, getUserById, updateUserById, login };
+module.exports = { signUp, getCurrentUser, getUserById, updateUserById, login };

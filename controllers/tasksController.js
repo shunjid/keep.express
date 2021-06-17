@@ -18,11 +18,15 @@ const createTask = async (req, res) => {
 
 const getTasks = async (req, res) => {
   const currentUser = req.user;
+  const queries = req.query;
+
+  const match = {
+    owner: currentUser._id,
+    isCompleted: queries.isCompleted === "true",
+  };
 
   try {
-    const tasks = await Task.find({
-      owner: currentUser._id,
-    });
+    const tasks = await Task.find(match);
     success(res, tasks, 200);
   } catch (e) {
     error(res, e.message, 500);

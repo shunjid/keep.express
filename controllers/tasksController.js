@@ -2,6 +2,7 @@ const Task = require("../models/tasksModel");
 const { success, error } = require("../utils/response");
 const { attributeValidator } = require("../utils/validator");
 
+// Path: "/tasks" <=> Verb: POST
 const createTask = async (req, res) => {
   const task = new Task({
     ...req.body,
@@ -16,21 +17,20 @@ const createTask = async (req, res) => {
   }
 };
 
+// Path: "/tasks" <=> Verb: GET
 const getTasks = async (req, res) => {
   const currentUser = req.user;
   const queries = req.query;
   const sort = {};
 
-  // filter
+  // filter, pagination, sort
   const matches = {
     owner: currentUser._id,
     isCompleted: queries.isCompleted === "true",
   };
 
-  // pagination
   const [limit = 5, skip = 0] = [+queries.limit, +queries.skip];
 
-  // sort
   if (queries.sortBy) {
     const [attribute, order] = queries.sortBy.split(":");
     sort[attribute] = order === "desc" ? -1 : 1;
@@ -44,6 +44,7 @@ const getTasks = async (req, res) => {
   }
 };
 
+// Path: "/tasks/:id" <=> Verb: GET
 const getTaskById = async (req, res) => {
   const { id: _id } = req.params;
   const currentUser = req.user;
@@ -61,6 +62,7 @@ const getTaskById = async (req, res) => {
   }
 };
 
+// Path: "/tasks/:id" <=> Verb: PATCH
 const updateTask = async (req, res) => {
   const { id: _id } = req.params;
   const currentUser = req.user;
@@ -89,6 +91,7 @@ const updateTask = async (req, res) => {
   }
 };
 
+// Path: "/tasks/:id" <=> Verb: DELETE
 const deleteTask = async (req, res) => {
   const { id: _id } = req.params;
   const currentUser = req.user;

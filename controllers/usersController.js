@@ -2,6 +2,7 @@ const User = require("../models/usersModel");
 const { attributeValidator } = require("../utils/validator");
 const { success, error } = require("../utils/response");
 
+// Path: "/users" <=> Verb: POST
 const signUp = async (req, res) => {
   const user = new User(req.body);
 
@@ -14,6 +15,7 @@ const signUp = async (req, res) => {
   }
 };
 
+// Path: "/users/me" <=> Verb: GET
 const getCurrentUser = async (req, res) => {
   try {
     success(res, req.user, 200);
@@ -22,6 +24,7 @@ const getCurrentUser = async (req, res) => {
   }
 };
 
+// Path: "/users/:id" <=> Verb: PATCH
 const updateUserById = async (req, res) => {
   const user = req.user;
   const body = req.body;
@@ -45,6 +48,7 @@ const updateUserById = async (req, res) => {
   }
 };
 
+// Path: "/users/login" <=> Verb: POST
 const login = async (req, res) => {
   const { email, password } = req.body;
 
@@ -58,6 +62,7 @@ const login = async (req, res) => {
   }
 };
 
+// Path: "/users/logout" <=> Verb: POST
 const logout = async (req, res) => {
   try {
     const currentUser = req.user;
@@ -74,6 +79,7 @@ const logout = async (req, res) => {
   }
 };
 
+// Path: "/users/logoutAll" <=> Verb: POST
 const logoutAll = async (req, res) => {
   try {
     const currentUser = req.user;
@@ -85,6 +91,7 @@ const logoutAll = async (req, res) => {
   }
 };
 
+// Path: "/users/logoutExceptCurrent" <=> Verb: POST
 const logoutExceptCurrent = async (req, res) => {
   try {
     const currentUser = req.user;

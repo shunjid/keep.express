@@ -20,13 +20,15 @@ const getTasks = async (req, res) => {
   const currentUser = req.user;
   const queries = req.query;
 
-  const match = {
+  const matches = {
     owner: currentUser._id,
     isCompleted: queries.isCompleted === "true",
   };
 
+  const [limit = 5, skip = 0] = [+queries.limit, +queries.skip];
+
   try {
-    const tasks = await Task.find(match);
+    const tasks = await Task.find(matches).limit(limit).skip(skip);
     success(res, tasks, 200);
   } catch (e) {
     error(res, e.message, 500);

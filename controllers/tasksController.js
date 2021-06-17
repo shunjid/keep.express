@@ -19,16 +19,25 @@ const createTask = async (req, res) => {
 const getTasks = async (req, res) => {
   const currentUser = req.user;
   const queries = req.query;
+  const sort = {};
 
+  // filter
   const matches = {
     owner: currentUser._id,
     isCompleted: queries.isCompleted === "true",
   };
 
+  // pagination
   const [limit = 5, skip = 0] = [+queries.limit, +queries.skip];
 
+  // sort
+  if (queries.sortBy) {
+    const [attribute, order] = queries.sortBy.split(":");
+    sort[attribute] = order === "desc" ? -1 : 1;
+  }
+
   try {
-    const tasks = await Task.find(matches).limit(limit).skip(skip);
+    const tasks = await Task.find(matches).limit(limit).skip(skip).sort(sort);
     success(res, tasks, 200);
   } catch (e) {
     error(res, e.message, 500);
